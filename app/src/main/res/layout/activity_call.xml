@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/txtCallStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Apel în curs..."
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp" />
+
+    <!-- Butoane principale de control -->
+    <LinearLayout
+        android:id="@+id/controlsLayout"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp"
+        android:weightSum="5">
+
+        <ImageButton
+            android:id="@+id/btnSpeaker"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_lock_silent_mode_off"
+            android:contentDescription="Difuzor"
+            android:background="@android:color/transparent"
+            android:tint="@android:color/white" />
+
+        <ImageButton
+            android:id="@+id/btnMic"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_btn_speak_now"
+            android:contentDescription="Microfon"
+            android:background="@android:color/transparent"
+            android:tint="@android:color/white" />
+
+        <ImageButton
+            android:id="@+id/btnCamera"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_camera"
+            android:contentDescription="Camera"
+            android:background="@android:color/transparent"
+            android:tint="@android:color/white" />
+
+        <ImageButton
+            android:id="@+id/btnGift"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_share"
+            android:contentDescription="Trimite gift"
+            android:background="@android:color/transparent"
+            android:tint="@android:color/white" />
+
+        <ImageButton
+            android:id="@+id/btnEndCall"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:contentDescription="Închide apelul"
+            android:background="@android:color/transparent"
+            android:tint="#FF3B30" />
+    </LinearLayout>
+</RelativeLayout>

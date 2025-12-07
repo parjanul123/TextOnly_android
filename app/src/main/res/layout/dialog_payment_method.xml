@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#1E1E1E">
+
+    <TextView
+        android:text="Alege modalitatea de plată"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp" />
+
+    <ImageView
+        android:id="@+id/imgVisa"
+        android:src="@drawable/ic_visa_master"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:contentDescription="Visa Mastercard"
+        android:layout_marginBottom="16dp"
+        android:adjustViewBounds="true" />
+
+    <ImageView
+        android:id="@+id/imgPaysafe"
+        android:src="@drawable/ic_paysafe"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="Paysafecard"
+        android:adjustViewBounds="true" />
+
+    <ImageView
+        android:id="@+id/imgCoinbase"
+        android:src="@drawable/ic_coinbase"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:contentDescription="Coinbase"
+        android:adjustViewBounds="true" />
+
+    <Button
+        android:id="@+id/btnClose"
+        android:text="Închide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:backgroundTint="@color/teal_700"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="20dp"/>
+</LinearLayout>

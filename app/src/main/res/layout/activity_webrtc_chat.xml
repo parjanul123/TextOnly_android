@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FAFAFA">
+
+    <!-- Titlu simplu -->
+    <TextView
+        android:id="@+id/txtTitle"
+        android:text="TextOnly"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:textColor="#333" />
+
+    <!-- Zona de chat -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#EEEEEE"
+        android:padding="10dp"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/txtChat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📡 În așteptarea conexiunii..."
+            android:textSize="16sp"
+            android:textColor="#000"
+            android:lineSpacingExtra="4dp" />
+    </ScrollView>
+
+    <!-- Câmp mesaj + buton -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <EditText
+            android:id="@+id/inputMessage"
+            android:hint="Scrie mesaj..."
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="@android:drawable/editbox_background_normal"
+            android:imeOptions="actionSend" />
+
+        <Button
+            android:id="@+id/btnSend"
+            android:text="Trimite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp" />
+    </LinearLayout>
+
+</LinearLayout>
