@@ -1,4 +1,4 @@
-package text.only.app
+package com.example.textonly
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,7 +12,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import text.only.app.qrlogin.ToolbarMenuHandler
+import com.example.qrlogin.ToolbarMenuHandler
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class ChatActivity : AppCompatActivity() {

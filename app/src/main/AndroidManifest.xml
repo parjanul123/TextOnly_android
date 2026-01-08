@@ -95,7 +95,7 @@
 
         <!-- PROFIL -->
         <activity
-            android:name="text.only.app.qrlogin.ProfileActivity"
+            android:name="com.example.qrlogin.ProfileActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 

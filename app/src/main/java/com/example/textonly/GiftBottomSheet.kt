@@ -1,5 +1,4 @@
-package text.only.app
-
+package com.example.textonly
 
 import android.app.Dialog
 import android.os.Bundle

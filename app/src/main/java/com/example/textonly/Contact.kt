@@ -1,4 +1,4 @@
-package text.only.app.models
+package com.example.textonly.models
 
 data class Contact(
     val name: String,

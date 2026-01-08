@@ -1,4 +1,4 @@
-package text.only.app
+package com.example.textonly
 
 import org.junit.Test
 

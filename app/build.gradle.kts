@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "text.only.app"
+    namespace = "com.example.textonly"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "text.only.app"
+        applicationId = "com.example.textonly"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -70,7 +70,6 @@ dependencies {
 
     // ✅ WebRTC (folosește versiunea stabilă)
     implementation("io.github.webrtc-sdk:android:114.5735.01")
-    implementation("com.android.billingclient:billing-ktx:6.1.0")
 
     // ✅ Teste
     testImplementation("junit:junit:4.13.2")
