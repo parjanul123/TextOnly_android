@@ -1,4 +1,5 @@
-package com.example.textonly
+package text.only.app
+
 
 import android.os.Bundle
 import android.widget.*
@@ -7,6 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+// import ua.naiksoftware.stomp.Stomp
+// import ua.naiksoftware.stomp.StompClient
 
 class ChatWindowActivity : AppCompatActivity() {
 

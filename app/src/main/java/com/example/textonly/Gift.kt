@@ -1,4 +1,7 @@
-package com.example.textonly
+package text.only.app
+
+
+
 
 data class Gift(
     val name: String,

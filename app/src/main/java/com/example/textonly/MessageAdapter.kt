@@ -1,4 +1,4 @@
-package com.example.textonly
+package text.only.app
 
 import android.view.LayoutInflater
 import android.view.View

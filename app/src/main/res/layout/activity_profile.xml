@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="24dp">
+
+        <!-- 📸 Poză de Profil -->
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/img_profile"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@mipmap/textonly_round"
+                android:background="@android:drawable/dialog_holo_light_frame"
+                android:scaleType="centerCrop"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="Poză de profil" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:text="Schimbă"
+                android:textColor="@android:color/white"
+                android:background="#80000000"
+                android:padding="4dp"
+                android:textSize="12sp" />
+        </FrameLayout>
+
+        <EditText
+            android:id="@+id/edit_display_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nume afișat"
+            android:inputType="textPersonName"
+            android:layout_marginBottom="12dp"/>
+
+
+
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Salvează Profil"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- 💰 Buton Portofel -->
+        <Button
+            android:id="@+id/btn_wallet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="💰 Portofel OnlyCoins"
+            android:backgroundTint="#FFD700"
+            android:textColor="#000000"
+            android:layout_marginTop="24dp" />
+
+    </LinearLayout>
+</ScrollView>

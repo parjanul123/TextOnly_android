@@ -1,11 +1,3 @@
 <resources>
     <string name="app_name">TextOnly</string>
-
-    <!-- Exemple alte texte -->
-    <string-array name="currencies">
-        <item>România (RON)</item>
-        <item>Uniunea Europeană (EUR)</item>
-        <item>Statele Unite (USD)</item>
-        <item>Regatul Unit (GBP)</item>
-    </string-array>
 </resources>

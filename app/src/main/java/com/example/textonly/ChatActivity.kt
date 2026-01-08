@@ -1,15 +1,18 @@
-package com.example.textonly
+package text.only.app
 
 import android.content.Intent
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import text.only.app.qrlogin.ToolbarMenuHandler
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class ChatActivity : AppCompatActivity() {
@@ -18,12 +21,12 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var txtEmpty: TextView
     private lateinit var searchBar: EditText
     private lateinit var fabAddChat: FloatingActionButton
+    private lateinit var btnSettings: ImageButton
 
     private lateinit var contactsHelper: ContactsHelper
     private var chatList = mutableListOf<Contact>()
     private lateinit var adapter: ChatListAdapter
 
-    // 🔹 Launcher pentru alegerea contactului din agendă
     private val pickContactLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -59,15 +62,20 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        // ✅ Inițializează helperul AICI, după ce există un context valid
+        // 🔄 Verifică actualizări la pornire
+        val updateChecker = UpdateChecker(this)
+        updateChecker.checkForUpdates()
+
         contactsHelper = ContactsHelper(this)
 
         recyclerChats = findViewById(R.id.recyclerChats)
         txtEmpty = findViewById(R.id.txtEmpty)
         searchBar = findViewById(R.id.searchBar)
         fabAddChat = findViewById(R.id.fabAddChat)
+        btnSettings = findViewById(R.id.btnSettings)
 
-        // 🔹 Încarcă lista de contacte salvate în aplicație
+        ToolbarMenuHandler.setupToolbar(this, null, btnSettings)
+
         chatList = contactsHelper.getContacts().toMutableList()
         adapter = ChatListAdapter(chatList)
         recyclerChats.layoutManager = LinearLayoutManager(this)
@@ -75,7 +83,6 @@ class ChatActivity : AppCompatActivity() {
 
         updateEmptyState()
 
-        // 🔍 Căutare conversații
         searchBar.addTextChangedListener { editable ->
             val query = editable?.toString()?.trim() ?: ""
             val filtered = chatList.filter {
@@ -89,7 +96,6 @@ class ChatActivity : AppCompatActivity() {
             txtEmpty.visibility = if (filtered.isEmpty()) TextView.VISIBLE else TextView.GONE
         }
 
-        // ➕ Deschide agenda telefonului pentru conversație nouă
         fabAddChat.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI)
             pickContactLauncher.launch(intent)
