@@ -1,6 +1,6 @@
-package com.example.qrlogin;
+package text.only.app.qrlogin;
 
-import com.example.textonly.Config;
+import text.only.app.Config;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

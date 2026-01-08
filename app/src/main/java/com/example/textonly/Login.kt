@@ -1,4 +1,4 @@
-package com.example.textonly
+package text.only.app
 
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt

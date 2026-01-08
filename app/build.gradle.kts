@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.textonly"
+    namespace = "text.only.app"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.textonly"
+        applicationId = "text.only.app"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -60,6 +60,7 @@ dependencies {
     // ✅ RxJava și RxAndroid pentru STOMP
     implementation("io.reactivex.rxjava2:rxjava:2.2.21")
     implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
+    implementation("com.android.billingclient:billing-ktx:7.0.0")
 
     // ✅ Networking (OkHttp)
     implementation("com.squareup.okhttp3:okhttp:4.12.0")

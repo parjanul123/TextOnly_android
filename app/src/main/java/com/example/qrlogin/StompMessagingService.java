@@ -1,4 +1,4 @@
-package com.example.qrlogin;
+package text.only.app.qrlogin;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;

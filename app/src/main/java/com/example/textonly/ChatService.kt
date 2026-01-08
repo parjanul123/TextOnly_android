@@ -1,4 +1,4 @@
-package com.example.textonly
+package text.only.app
 
 import android.util.Log
 import okhttp3.*

@@ -1,6 +1,5 @@
-package com.example.textonly
+package text.only.app
 
-import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
@@ -9,54 +8,36 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.android.billingclient.api.*
 
-class BuyOnlycoinsActivity : AppCompatActivity() {
+class BuyOnlycoinsActivity : AppCompatActivity(), PurchasesUpdatedListener {
 
     private lateinit var spinnerCurrency: Spinner
     private lateinit var editAmount: EditText
     private lateinit var txtCoinsPreview: TextView
+    private lateinit var btnBuy: Button
+
+    private lateinit var billingClient: BillingClient
+    private var selectedProductId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_TextOnly)
         setContentView(R.layout.activity_buy_onlycoins)
 
-        // 🔹 findViewById
         spinnerCurrency = findViewById(R.id.spinnerCurrency)
         editAmount = findViewById(R.id.editAmount)
         txtCoinsPreview = findViewById(R.id.txtCoinsPreview)
-        val btnChooseMethod = findViewById<Button>(R.id.btnChooseMethod)
+        btnBuy = findViewById(R.id.btnChooseMethod)
 
-        // 🔹 ADAPTER – text RON / EUR VERDE în chenar
-        val adapter = object : ArrayAdapter<String>(
-            this,
-            android.R.layout.simple_spinner_item,
-            resources.getStringArray(R.array.currencies)
-        ) {
-            override fun getView(
-                position: Int,
-                convertView: View?,
-                parent: ViewGroup
-            ): View {
-                val view = super.getView(position, convertView, parent)
-                val textView = view as TextView
-                textView.setTextColor(android.graphics.Color.parseColor("#00E676"))
-                return view
-            }
-        }
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerCurrency.adapter = adapter
+        setupSpinner()
+        setupBilling()
 
-        // 🔹 update când se schimbă suma
         editAmount.addTextChangedListener(simpleWatcher)
 
-        // 🔹 update când se schimbă valuta
         spinnerCurrency.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
+                parent: AdapterView<*>, view: View?, position: Int, id: Long
             ) {
                 updateCoinsPreview()
             }
@@ -64,68 +45,125 @@ class BuyOnlycoinsActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        // 🔹 buton
-        btnChooseMethod.setOnClickListener {
-            val amount = editAmount.text.toString().toDoubleOrNull()
-            if (amount == null || amount < 5) {
-                Toast.makeText(this, "Introdu o sumă minimă de 5", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            showPaymentDialog(amount)
+        btnBuy.setOnClickListener {
+            startGoogleBilling()
         }
     }
 
+    // 🔹 Spinner
+    private fun setupSpinner() {
+        val adapter = object : ArrayAdapter<String>(
+            this,
+            android.R.layout.simple_spinner_item,
+            resources.getStringArray(R.array.currencies)
+        ) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getView(position, convertView, parent)
+                (view as TextView).setTextColor(Color.parseColor("#00E676"))
+                return view
+            }
+        }
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerCurrency.adapter = adapter
+    }
+
+    // 🔹 TextWatcher
     private val simpleWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
             updateCoinsPreview()
         }
-
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }
 
+    // 🔹 Preview coins
     private fun updateCoinsPreview() {
         val amount = editAmount.text.toString().toDoubleOrNull() ?: 0.0
         val currency = spinnerCurrency.selectedItem.toString()
-
         val rate = if (currency == "EUR") 10 else 2
         val coins = (amount * rate).toInt()
 
         txtCoinsPreview.text = "Vei primi: $coins OnlyCoins"
+
+        // mapăm suma pe produse reale din Play Console
+        selectedProductId = when {
+            coins >= 200 -> "onlycoins_200"
+            coins >= 100 -> "onlycoins_100"
+            else -> "onlycoins_50"
+        }
     }
 
-    private fun showPaymentDialog(amount: Double) {
-        val dialog = Dialog(this)
-        dialog.setContentView(R.layout.dialog_payment_method)
+    // 🔹 Google Billing setup
+    private fun setupBilling() {
+        billingClient = BillingClient.newBuilder(this)
+            .setListener(this)
+            .enablePendingPurchases()
+            .build()
 
-        dialog.findViewById<ImageView>(R.id.imgVisa).setOnClickListener {
-            simulatePayment("Visa / Mastercard", amount)
-            dialog.dismiss()
-        }
+        billingClient.startConnection(object : BillingClientStateListener {
+            override fun onBillingSetupFinished(result: BillingResult) {
+                if (result.responseCode != BillingClient.BillingResponseCode.OK) {
+                    Toast.makeText(
+                        this@BuyOnlycoinsActivity,
+                        "Eroare Google Billing",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
 
-        dialog.findViewById<ImageView>(R.id.imgPaysafe).setOnClickListener {
-            simulatePayment("Paysafecard", amount)
-            dialog.dismiss()
-        }
-
-        dialog.findViewById<ImageView>(R.id.imgCoinbase).setOnClickListener {
-            simulatePayment("Coinbase (+15% bonus)", amount * 1.15)
-            dialog.dismiss()
-        }
-
-        dialog.findViewById<Button>(R.id.btnClose).setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
+            override fun onBillingServiceDisconnected() {}
+        })
     }
 
-    private fun simulatePayment(method: String, amount: Double) {
-        updateCoinsPreview()
-        Toast.makeText(
-            this,
-            "Plată efectuată cu $method ✅\n${txtCoinsPreview.text}",
-            Toast.LENGTH_LONG
-        ).show()
+    // 🔹 Pornește plata Google
+    private fun startGoogleBilling() {
+        val amount = editAmount.text.toString().toDoubleOrNull()
+        if (amount == null || amount < 1) {
+            Toast.makeText(this, "Introdu o sumă minimă de 1", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val query = QueryProductDetailsParams.newBuilder()
+            .setProductList(
+                listOf(
+                    QueryProductDetailsParams.Product.newBuilder()
+                        .setProductId(selectedProductId)
+                        .setProductType(BillingClient.ProductType.INAPP)
+                        .build()
+                )
+            )
+            .build()
+
+        billingClient.queryProductDetailsAsync(query) { _, productDetailsList ->
+            if (productDetailsList.isEmpty()) {
+                Toast.makeText(this, "Produs indisponibil", Toast.LENGTH_SHORT).show()
+                return@queryProductDetailsAsync
+            }
+
+            val productDetails = productDetailsList[0]
+
+            val billingParams = BillingFlowParams.newBuilder()
+                .setProductDetailsParamsList(
+                    listOf(
+                        BillingFlowParams.ProductDetailsParams.newBuilder()
+                            .setProductDetails(productDetails)
+                            .build()
+                    )
+                )
+                .build()
+
+            billingClient.launchBillingFlow(this, billingParams)
+        }
+    }
+
+    // 🔹 Rezultat plată
+    override fun onPurchasesUpdated(
+        billingResult: BillingResult,
+        purchases: MutableList<Purchase>?
+    ) {
+        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
+            Toast.makeText(this, "Plată reușită ✅ OnlyCoins adăugate", Toast.LENGTH_LONG).show()
+            // aici poți adăuga coins în Wallet / backend
+        }
     }
 }

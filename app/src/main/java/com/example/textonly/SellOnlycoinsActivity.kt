@@ -1,7 +1,9 @@
-package com.example.textonly
+package text.only.app
 
 import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -25,6 +27,31 @@ class SellOnlycoinsActivity : Activity() {
         spinnerCurrencySell = findViewById(R.id.spinnerCurrencySell)
         txtSellPreview = findViewById(R.id.txtSellPreview)
 
+        setupSpinner()
+
+        editSellAmount.addTextChangedListener(simpleWatcher)
+
+        spinnerCurrencySell.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    updateSellPreview()
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
+
+        btnConfirmSell.setOnClickListener {
+            onSellClicked()
+        }
+    }
+
+    // 🔹 Spinner
+    private fun setupSpinner() {
         val adapter = object : ArrayAdapter<String>(
             this,
             android.R.layout.simple_spinner_item,
@@ -42,36 +69,12 @@ class SellOnlycoinsActivity : Activity() {
         }
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCurrencySell.adapter = adapter
-
-        editSellAmount.addTextChangedListener(simpleWatcher)
-
-        spinnerCurrencySell.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    updateSellPreview()
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>) {}
-            }
-
-        btnConfirmSell.setOnClickListener {
-            val amountStr = editSellAmount.text.toString()
-            if (amountStr.isNotEmpty()) {
-                sellCoins(amountStr.toInt())
-            }
-        }
     }
 
     private val simpleWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
             updateSellPreview()
         }
-
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }
@@ -84,19 +87,31 @@ class SellOnlycoinsActivity : Activity() {
         txtSellPreview.text = String.format("Vei primi: %.2f %s", value, currency)
     }
 
-    private fun sellCoins(amount: Int) {
+    // 🔹 REDIRECȚIONARE CĂTRE PAGINA IBAN
+    private fun onSellClicked() {
+        val amountStr = editSellAmount.text.toString()
+        if (amountStr.isEmpty()) {
+            Toast.makeText(this, "Introdu suma de vândut", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val amount = amountStr.toInt()
+
         val prefs = getSharedPreferences(WalletActivity.PREFS_NAME, MODE_PRIVATE)
         val currentBalance = prefs.getInt(WalletActivity.KEY_COIN_BALANCE, 0)
 
-        if (currentBalance >= amount) {
-            prefs.edit()
-                .putInt(WalletActivity.KEY_COIN_BALANCE, currentBalance - amount)
-                .apply()
-
-            Toast.makeText(this, "Ai vândut $amount OnlyCoins!", Toast.LENGTH_SHORT).show()
-            finish()
-        } else {
+        if (currentBalance < amount) {
             Toast.makeText(this, "Fonduri insuficiente!", Toast.LENGTH_SHORT).show()
+            return
         }
+
+        // 🔒 RECOMANDAT: trimite și valuta
+        val currency = spinnerCurrencySell.selectedItem.toString()
+
+        val backendUrl =
+            "https://textonly-backend.onrender.com/iban.html?coins=$amount&currency=$currency"
+
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(backendUrl))
+        startActivity(intent)
     }
 }

@@ -1,4 +1,4 @@
-package com.example.textonly
+package text.only.app
 
 import android.app.AlertDialog
 import android.app.DownloadManager

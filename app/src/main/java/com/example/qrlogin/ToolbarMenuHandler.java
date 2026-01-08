@@ -1,7 +1,7 @@
-package com.example.qrlogin;
+package text.only.app.qrlogin;
 
-import com.example.textonly.R;
-import com.example.textonly.ScanQRActivity;
+import text.only.app.R;
+import text.only.app.ScanQRActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.widget.ImageButton;

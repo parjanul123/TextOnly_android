@@ -1,9 +1,9 @@
-package com.example.qrlogin;
+package text.only.app.qrlogin;
 
-import com.example.textonly.BuyOnlycoinsActivity;
-import com.example.textonly.Config;
-import com.example.textonly.R;
-import com.example.textonly.WalletActivity;
+import text.only.app.BuyOnlycoinsActivity;
+import text.only.app.Config;
+import text.only.app.R;
+import text.only.app.WalletActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;

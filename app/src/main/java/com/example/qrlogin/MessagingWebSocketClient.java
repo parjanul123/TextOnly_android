@@ -1,4 +1,4 @@
-package com.example.qrlogin;
+package text.only.app.qrlogin;
 
 import android.util.Log;
 import org.java_websocket.client.WebSocketClient;

@@ -1,4 +1,4 @@
-package com.example.textonly
+package text.only.app
 
 object Config {
     // ✅ URL-ul actualizat din screenshot-ul Ngrok

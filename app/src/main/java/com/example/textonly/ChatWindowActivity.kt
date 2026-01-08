@@ -1,4 +1,5 @@
-package com.example.textonly
+package text.only.app
+
 
 import android.os.Bundle
 import android.widget.*

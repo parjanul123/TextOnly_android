@@ -21,12 +21,12 @@
                 android:id="@+id/img_profile"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:src="@mipmap/ic_launcher_round"
                 android:background="@android:drawable/dialog_holo_light_frame"
-                android:scaleType="centerCrop"
                 android:clickable="true"
+                android:contentDescription="Poză de profil"
                 android:focusable="true"
-                android:contentDescription="Poză de profil" />
+                android:scaleType="centerCrop"
+                android:src="@mipmap/textonly_round" />
 
             <TextView
                 android:layout_width="wrap_content"

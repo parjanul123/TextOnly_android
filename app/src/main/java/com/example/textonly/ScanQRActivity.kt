@@ -1,4 +1,4 @@
-package com.example.textonly
+package text.only.app
 
 import android.Manifest
 import android.content.Context
