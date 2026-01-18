@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#EEE">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Setează Costul Deblocării"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroupPriceType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <RadioButton
+            android:id="@+id/radioCoins"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OnlyCoins"
+            android:checked="true"
+            android:layout_marginEnd="16dp"/>
+
+        <RadioButton
+            android:id="@+id/radioGift"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gift"/>
+    </RadioGroup>
+
+    <!-- COINS INPUT -->
+    <LinearLayout
+        android:id="@+id/containerCoins"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:visibility="visible">
+
+        <EditText
+            android:id="@+id/inputPriceCoins"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:hint="Suma"
+            android:inputType="number"
+            android:gravity="center"/>
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/onlycoin"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+    <!-- GIFT SELECTION -->
+    <LinearLayout
+        android:id="@+id/containerGifts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Alege ce Gift trebuie să trimită:"
+            android:gravity="center"
+            android:layout_marginBottom="8dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerGiftTypes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="120dp"/>
+            
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnConfirmPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Trimite Fișier"
+        android:layout_marginTop="24dp"/>
+
+</LinearLayout>

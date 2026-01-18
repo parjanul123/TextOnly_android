@@ -1,0 +1,41 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    
+    <!-- Top Left -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:pathData="M4,9 L4,4 L9,4"/>
+        
+    <!-- Top Right -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:pathData="M15,4 L20,4 L20,9"/>
+        
+    <!-- Bottom Right -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:pathData="M20,15 L20,20 L15,20"/>
+        
+    <!-- Bottom Left -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:pathData="M9,20 L4,20 L4,15"/>
+        
+    <!-- Optional: Center Line for scanning effect -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF0000"
+        android:strokeWidth="1"
+        android:pathData="M2,12 L22,12"/>
+</vector>

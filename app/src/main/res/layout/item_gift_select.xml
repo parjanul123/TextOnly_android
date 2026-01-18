@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:backgroundTint="#444">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/imgGift"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_gift_card" />
+
+        <TextView
+            android:id="@+id/txtGiftName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gift Name"
+            android:textColor="#FFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp"
+            android:gravity="center"/>
+            
+        <TextView
+            android:id="@+id/txtInventoryCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="x5"
+            android:textColor="#4CAF50"
+            android:textSize="12sp"
+            android:layout_marginTop="2dp"/>
+            
+        <TextView
+            android:id="@+id/txtPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="50 Coins"
+            android:textColor="#FF9800"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
