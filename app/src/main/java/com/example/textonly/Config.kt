@@ -13,6 +13,11 @@ object Config {
     const val PROFILE_UPDATE_URL = "$BASE_URL/users/profile"
     const val CHAT_GPT_URL = "$BASE_URL/ai/chat"
     
+    // Store & Inventory (Backend Endpoints)
+    const val STORE_ITEMS_URL = "$BASE_URL/store/items"
+    const val BUY_ITEM_URL = "$BASE_URL/store/buy"
+    const val INVENTORY_URL = "$BASE_URL/store/inventory"
+    
     // Actualizări aplicație
     const val APP_UPDATE_URL = "$BASE_URL/app/version"
 }

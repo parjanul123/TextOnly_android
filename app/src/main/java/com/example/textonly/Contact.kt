@@ -1,6 +1,6 @@
-package text.only.app.models
+package text.only.app
 
 data class Contact(
     val name: String,
-    val lastMessage: String
+    val phone: String
 )

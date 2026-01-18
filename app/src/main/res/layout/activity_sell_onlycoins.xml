@@ -32,7 +32,6 @@
             android:id="@+id/spinnerCurrencySell"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/currencies"
             android:layout_marginBottom="6dp" />
 
         <!-- 🔥 PREVIEW SUMĂ -->
@@ -53,15 +52,29 @@
             android:textColor="@android:color/white"
             android:layout_marginBottom="6dp" />
 
-        <EditText
-            android:id="@+id/edit_sell_amount"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Introdu suma de monede"
-            android:inputType="number"
-            android:textColor="@android:color/white"
-            android:textColorHint="#AAAAAA"
-            android:layout_marginBottom="24dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="24dp">
+            
+            <EditText
+                android:id="@+id/edit_sell_amount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Introdu suma de monede"
+                android:inputType="number"
+                android:textColor="@android:color/white"
+                android:textColorHint="#AAAAAA" />
+                
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/onlycoin"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
 
         <Button
             android:id="@+id/btn_confirm_sell"

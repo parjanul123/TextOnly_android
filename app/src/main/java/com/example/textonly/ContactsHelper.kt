@@ -1,21 +1,17 @@
 package text.only.app
 
-import android.content.ContentResolver
+import android.annotation.SuppressLint
 import android.content.Context
 import android.provider.ContactsContract
 
-data class Contact(
-    val name: String,
-    val phone: String
-)
-
 class ContactsHelper(private val context: Context) {
 
+    @SuppressLint("Range")
     fun getContacts(): List<Contact> {
-        val contactsList = mutableListOf<Contact>()
-        val resolver: ContentResolver = context.contentResolver
+        val list = mutableListOf<Contact>()
+        val seen = HashSet<String>()
 
-        val cursor = resolver.query(
+        val cursor = context.contentResolver.query(
             ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
             arrayOf(
                 ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
@@ -27,16 +23,18 @@ class ContactsHelper(private val context: Context) {
         )
 
         cursor?.use {
-            val nameIndex = it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
-            val numberIndex = it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
-
             while (it.moveToNext()) {
-                val name = it.getString(nameIndex) ?: "Fără nume"
-                val number = it.getString(numberIndex) ?: ""
-                contactsList.add(Contact(name, number))
+                val name = it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
+                val phone = it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+
+                // Eliminăm duplicatele bazate pe nume și telefon
+                val key = "$name|$phone"
+                if (seen.add(key)) {
+                    list.add(Contact(name, phone))
+                }
             }
         }
 
-        return contactsList
+        return list
     }
 }

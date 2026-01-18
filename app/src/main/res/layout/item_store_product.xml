@@ -2,7 +2,8 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp">
+    android:layout_margin="8dp"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,36 +25,44 @@
             android:layout_height="wrap_content"
             android:text="Produs"
             android:textStyle="bold"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:gravity="center"/>
 
-        <TextView
-            android:id="@+id/txtPrice"
+        <!-- Price Container -->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="50 OnlyCoins"
-            android:textColor="#FF9800"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
 
-        <LinearLayout
+            <TextView
+                android:id="@+id/txtPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5"
+                android:textColor="#FF9800"
+                android:textStyle="bold"
+                android:layout_marginEnd="4dp"/>
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/onlycoin" />
+                
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" OnlyCoins"
+                android:textColor="#FF9800"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnBuy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginTop="8dp">
-            
-            <Button
-                android:id="@+id/btnBuy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cumpără"
-                android:layout_marginEnd="8dp"/>
-
-            <Button
-                android:id="@+id/btnGift"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Gift"
-                style="@style/Widget.AppCompat.Button.Colored"/>
-        </LinearLayout>
+            android:text="Cumpără"/>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

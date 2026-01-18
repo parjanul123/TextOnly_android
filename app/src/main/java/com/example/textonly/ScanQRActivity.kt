@@ -1,7 +1,9 @@
 package text.only.app
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -93,7 +95,16 @@ class ScanQRActivity : ComponentActivity() {
                             runOnUiThread {
                                 statusText.text = "Cod detectat..."
                             }
-                            sendTokenToBackend(qrValue)
+                            
+                            // Check if we should return result instead of auto-processing
+                            if (intent.getBooleanExtra("RETURN_RESULT", false)) {
+                                val result = Intent()
+                                result.putExtra("SCANNED_QR", qrValue)
+                                setResult(Activity.RESULT_OK, result)
+                                finish()
+                            } else {
+                                sendTokenToBackend(qrValue)
+                            }
                         }
                     }
                 }
@@ -116,7 +127,6 @@ class ScanQRActivity : ComponentActivity() {
         json.put("token", token)
         json.put("phoneNumber", phoneNumber)
 
-        // Folosim URL-ul actualizat din Config (fără /api)
         val validateUrl = Config.QR_VALIDATE_URL
         Log.d("QR_LOGIN", "Sending: $json to $validateUrl")
 
@@ -140,7 +150,6 @@ class ScanQRActivity : ComponentActivity() {
                         Toast.makeText(this@ScanQRActivity, "Login Reușit! ✅", Toast.LENGTH_LONG).show()
                         finish()
                     } else {
-                        // Afișăm codul de eroare și URL-ul pentru a depana mai ușor
                         Toast.makeText(this@ScanQRActivity, "Err ${response.code} la $validateUrl", Toast.LENGTH_LONG).show()
                         isProcessing = false
                     }

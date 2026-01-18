@@ -18,6 +18,10 @@ class SellOnlycoinsActivity : Activity() {
     private lateinit var spinnerCurrencySell: Spinner
     private lateinit var txtSellPreview: TextView
 
+    // 🔹 CONSTANTE WALLET (nu mai depindem de WalletActivity)
+    private val PREFS_NAME = "WalletPrefs"
+    private val KEY_COIN_BALANCE = "coin_balance"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sell_onlycoins)
@@ -50,7 +54,7 @@ class SellOnlycoinsActivity : Activity() {
         }
     }
 
-    // 🔹 Spinner
+    // 🔹 Spinner cu text verde
     private fun setupSpinner() {
         val adapter = object : ArrayAdapter<String>(
             this,
@@ -87,7 +91,7 @@ class SellOnlycoinsActivity : Activity() {
         txtSellPreview.text = String.format("Vei primi: %.2f %s", value, currency)
     }
 
-    // 🔹 REDIRECȚIONARE CĂTRE PAGINA IBAN
+    // 🔹 REDIRECȚIONARE CĂTRE PAGINA IBAN (backend)
     private fun onSellClicked() {
         val amountStr = editSellAmount.text.toString()
         if (amountStr.isEmpty()) {
@@ -97,15 +101,14 @@ class SellOnlycoinsActivity : Activity() {
 
         val amount = amountStr.toInt()
 
-        val prefs = getSharedPreferences(WalletActivity.PREFS_NAME, MODE_PRIVATE)
-        val currentBalance = prefs.getInt(WalletActivity.KEY_COIN_BALANCE, 0)
+        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+        val currentBalance = prefs.getInt(KEY_COIN_BALANCE, 0)
 
         if (currentBalance < amount) {
             Toast.makeText(this, "Fonduri insuficiente!", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // 🔒 RECOMANDAT: trimite și valuta
         val currency = spinnerCurrencySell.selectedItem.toString()
 
         val backendUrl =

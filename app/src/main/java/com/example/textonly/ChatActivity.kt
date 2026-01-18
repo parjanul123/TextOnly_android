@@ -2,107 +2,151 @@ package text.only.app
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.ContactsContract
+import android.view.ActionMode
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import text.only.app.qrlogin.ToolbarMenuHandler
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.launch
+import text.only.app.qrlogin.ToolbarMenuHandler
 
 class ChatActivity : AppCompatActivity() {
 
-    private lateinit var recyclerChats: RecyclerView
-    private lateinit var txtEmpty: TextView
-    private lateinit var searchBar: EditText
-    private lateinit var fabAddChat: FloatingActionButton
-    private lateinit var btnSettings: ImageButton
-
-    private lateinit var contactsHelper: ContactsHelper
-    private var chatList = mutableListOf<Contact>()
-    private lateinit var adapter: ChatListAdapter
-
-    private val pickContactLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == RESULT_OK && result.data != null) {
-            val contactUri = result.data!!.data ?: return@registerForActivityResult
-
-            val cursor = contentResolver.query(
-                contactUri,
-                arrayOf(
-                    ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-                    ContactsContract.CommonDataKinds.Phone.NUMBER
-                ),
-                null,
-                null,
-                null
-            )
-
-            cursor?.use {
-                if (it.moveToFirst()) {
-                    val name = it.getString(0)
-                    val phone = it.getString(1)
-
-                    val intent = Intent(this, ChatWindowActivity::class.java)
-                    intent.putExtra("contact_name", name)
-                    intent.putExtra("contact_phone", phone)
-                    startActivity(intent)
-                }
-            }
-        }
-    }
+    private lateinit var recyclerMainList: RecyclerView
+    private lateinit var mainListAdapter: MainListAdapter
+    private var mainList = mutableListOf<MainListItem>()
+    private var actionMode: ActionMode? = null
+    
+    // ... (alte referințe UI)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        // 🔄 Verifică actualizări la pornire
-        val updateChecker = UpdateChecker(this)
-        updateChecker.checkForUpdates()
+        recyclerMainList = findViewById(R.id.recyclerChats)
+        val fabAddChat: FloatingActionButton = findViewById(R.id.fabAddChat)
+        val btnSettings: ImageButton = findViewById(R.id.btnSettings)
+        val btnAddServer: ImageButton = findViewById(R.id.btnAddServer)
 
-        contactsHelper = ContactsHelper(this)
-
-        recyclerChats = findViewById(R.id.recyclerChats)
-        txtEmpty = findViewById(R.id.txtEmpty)
-        searchBar = findViewById(R.id.searchBar)
-        fabAddChat = findViewById(R.id.fabAddChat)
-        btnSettings = findViewById(R.id.btnSettings)
+        setupRecyclerView()
+        loadAllItemsFromDb() // Încărcăm totul
 
         ToolbarMenuHandler.setupToolbar(this, null, btnSettings)
 
-        chatList = contactsHelper.getContacts().toMutableList()
-        adapter = ChatListAdapter(chatList)
-        recyclerChats.layoutManager = LinearLayoutManager(this)
-        recyclerChats.adapter = adapter
-
-        updateEmptyState()
-
-        searchBar.addTextChangedListener { editable ->
-            val query = editable?.toString()?.trim() ?: ""
-            val filtered = chatList.filter {
-                it.name.contains(query, ignoreCase = true)
-            }
-
-            adapter = ChatListAdapter(filtered)
-            recyclerChats.adapter = adapter
-
-            txtEmpty.text = if (filtered.isEmpty()) "Nicio conversație găsită" else ""
-            txtEmpty.visibility = if (filtered.isEmpty()) TextView.VISIBLE else TextView.GONE
+        fabAddChat.setOnClickListener {
+            startActivity(Intent(this, SelectContactActivity::class.java))
         }
 
-        fabAddChat.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI)
-            pickContactLauncher.launch(intent)
+        btnAddServer.setOnClickListener {
+            showCreateServerDialog()
         }
     }
 
-    private fun updateEmptyState() {
-        txtEmpty.visibility = if (chatList.isEmpty()) TextView.VISIBLE else TextView.GONE
+    private fun setupRecyclerView() {
+        mainListAdapter = MainListAdapter(mainList,
+            { item -> // Click normal
+                when (item) {
+                    is MainListItem.ServerItem -> {
+                        val intent = Intent(this, ServerActivity::class.java).apply {
+                            putExtra("SERVER_NAME", item.server.name)
+                            putExtra("SERVER_ID", item.server.id)
+                        }
+                        startActivity(intent)
+                    }
+                    is MainListItem.ConversationItem -> {
+                        val intent = Intent(this, ChatWindowActivity::class.java).apply {
+                            putExtra("contact_name", item.conversation.contactName)
+                            putExtra("contact_phone", item.conversation.contactPhone)
+                        }
+                        startActivity(intent)
+                    }
+                }
+            },
+            { item -> // Click lung
+                if (actionMode == null) {
+                    actionMode = startActionMode(ActionModeCallback(item))
+                }
+                true
+            }
+        )
+        recyclerMainList.layoutManager = LinearLayoutManager(this)
+        recyclerMainList.adapter = mainListAdapter
+    }
+    
+    private fun loadAllItemsFromDb() {
+        lifecycleScope.launch {
+            val db = AppDatabase.getInstance(applicationContext)
+            val servers = db.serverDao().getAllServers()
+            val conversations = db.conversationDao().getAllConversations()
+
+            mainList.clear()
+            mainList.addAll(servers.map { MainListItem.ServerItem(it) })
+            mainList.addAll(conversations.map { MainListItem.ConversationItem(it) })
+            
+            // TODO: Sortează lista combinată, de ex. după nume
+            
+            mainListAdapter.updateItems(mainList)
+        }
+    }
+    
+    private inner class ActionModeCallback(private val item: MainListItem) : ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            mode?.menuInflater?.inflate(R.menu.context_menu, menu)
+            mode?.title = when (item) {
+                is MainListItem.ServerItem -> item.server.name
+                is MainListItem.ConversationItem -> item.conversation.contactName
+            }
+            return true
+        }
+        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean = false
+        override fun onActionItemClicked(mode: ActionMode?, menuItem: MenuItem?): Boolean {
+            return when (menuItem?.itemId) {
+                R.id.action_delete -> {
+                    lifecycleScope.launch {
+                        val db = AppDatabase.getInstance(applicationContext)
+                        when (item) {
+                            is MainListItem.ServerItem -> db.serverDao().delete(item.server)
+                            is MainListItem.ConversationItem -> db.conversationDao().delete(item.conversation)
+                        }
+                        loadAllItemsFromDb()
+                    }
+                    Toast.makeText(this@ChatActivity, "Șters", Toast.LENGTH_SHORT).show()
+                    mode?.finish()
+                    true
+                }
+                else -> {
+                    Toast.makeText(this@ChatActivity, "Acțiune: ${menuItem?.title}", Toast.LENGTH_SHORT).show()
+                    mode?.finish()
+                    true
+                }
+            }
+        }
+        override fun onDestroyActionMode(mode: ActionMode?) { actionMode = null }
+    }
+
+    private fun showCreateServerDialog() {
+        // ... (funcția rămâne la fel, dar reîncarcă totul)
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Creează un Server Nou")
+        val input = EditText(this).apply { hint = "Numele serverului" }
+        builder.setView(input)
+        builder.setPositiveButton("Creează") { _, _ ->
+            val serverName = input.text.toString().trim()
+            if (serverName.isNotEmpty()) {
+                lifecycleScope.launch {
+                    AppDatabase.getInstance(applicationContext).serverDao().insert(Server(name = serverName))
+                    loadAllItemsFromDb() // Reîncărcăm toată lista
+                }
+            }
+        }
+        builder.setNegativeButton("Anulează", null)
+        builder.show()
     }
 }

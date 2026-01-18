@@ -6,7 +6,6 @@
     android:gravity="center"
     android:background="#1B2838"
     android:padding="24dp">
-    <!-- Steam-like dark blue background -->
 
     <ImageView
         android:layout_width="80dp"
@@ -23,42 +22,151 @@
         android:textStyle="bold"
         android:layout_marginBottom="8dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Codul tău de autentificare"
-        android:textColor="#AABBBC"
-        android:textSize="16sp"
-        android:layout_marginBottom="32dp"/>
-
-    <TextView
-        android:id="@+id/txtGuardCode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="-----"
-        android:textColor="#66C0F4"
-        android:textSize="48sp"
-        android:letterSpacing="0.2"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp"/>
-
-    <ProgressBar
-        android:id="@+id/progressBarGuard"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:max="300"
-        android:progress="300"
-        android:progressTint="#66C0F4"
-        android:layout_marginBottom="48dp"/>
-
-    <Button
-        android:id="@+id/btnScanQr"
+    <!-- STATE: SETUP (Not Added) -->
+    <LinearLayout
+        android:id="@+id/layoutSetup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Autentificare Web (QR)"
-        android:backgroundTint="#2A475E"
-        android:textColor="#FFFFFF"
-        android:padding="16dp"/>
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Protejează-ți contul Only cu autentificarea în doi pași."
+            android:textColor="#AABBBC"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:layout_marginBottom="32dp"/>
+
+        <Button
+            android:id="@+id/btnAddAuthenticator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Adaugă Autentificator"
+            android:backgroundTint="#2A475E"
+            android:textColor="#FFFFFF"
+            android:padding="16dp"/>
+
+    </LinearLayout>
+
+
+    <!-- STATE: ACTIVE (Added) -->
+    <LinearLayout
+        android:id="@+id/layoutActive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <!-- SUB-STATE: SCAN -->
+        <LinearLayout
+            android:id="@+id/layoutScan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Scanează codul QR de pe ecran pentru a te autentifica."
+                android:textColor="#AABBBC"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:layout_marginBottom="32dp"/>
+
+            <Button
+                android:id="@+id/btnScanQr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Scanează QR"
+                android:backgroundTint="#2A475E"
+                android:textColor="#FFFFFF"
+                android:padding="16dp"
+                android:layout_marginBottom="24dp"/>
+                
+            <Button
+                android:id="@+id/btnRemoveAuthenticator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Elimină Autentificator"
+                android:textColor="#F44336"
+                style="@style/Widget.AppCompat.Button.Borderless"/>
+                
+        </LinearLayout>
+
+        <!-- SUB-STATE: CHALLENGE -->
+        <LinearLayout
+            android:id="@+id/layoutChallenge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ești tu? Alege numărul comun."
+                android:textColor="#66C0F4"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Selectează numărul care apare pe dispozitivul celălalt:"
+                android:textColor="#AABBBC"
+                android:gravity="center"
+                android:layout_marginBottom="24dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btnOption1"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:text="12"
+                    android:textSize="24sp"
+                    android:backgroundTint="#2A475E"
+                    android:layout_margin="8dp"/>
+
+                <Button
+                    android:id="@+id/btnOption2"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:text="45"
+                    android:textSize="24sp"
+                    android:backgroundTint="#2A475E"
+                    android:layout_margin="8dp"/>
+
+                <Button
+                    android:id="@+id/btnOption3"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:text="89"
+                    android:textSize="24sp"
+                    android:backgroundTint="#2A475E"
+                    android:layout_margin="8dp"/>
+            </LinearLayout>
+            
+            <Button
+                android:id="@+id/btnCancelAuth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Anulează"
+                android:textColor="#F44336"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_marginTop="24dp"/>
+
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

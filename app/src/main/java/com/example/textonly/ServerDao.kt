@@ -1,6 +1,7 @@
 package text.only.app
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 
@@ -12,6 +13,9 @@ interface ServerDao {
     
     @Insert
     suspend fun insert(server: Server)
+
+    @Delete
+    suspend fun delete(server: Server)
 
     @Query("SELECT * FROM servers ORDER BY name ASC")
     suspend fun getAllServers(): List<Server>

@@ -3,8 +3,6 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
-        // ✅ JitPack — necesar pentru WebRTC
-        maven { url = uri("https://jitpack.io") }
     }
 }
 
@@ -13,8 +11,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        // ✅ aici din nou JitPack
-        maven { url = uri("https://jitpack.io") }
+        maven { url = uri("https://jitpack.io") } // Am adăugat la loc JitPack
     }
 }
 

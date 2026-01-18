@@ -1,28 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center">
+    android:background="#1E1E1E">
 
-    <TextView
-        android:id="@+id/txtVoiceStatus"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/layoutHeader"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Conectat la canalul de voce"
-        android:textSize="18sp"/>
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/txtVoiceChannelName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nume Canal"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:id="@+id/txtVoiceStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Conectat"
+                android:textColor="#4CAF50"
+                android:textSize="14sp"/>
+        </LinearLayout>
         
-    <TextView
-        android:id="@+id/txtVoiceChannelName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nume Canal"
-        android:textSize="22sp"
-        android:textStyle="bold"/>
+        <ImageButton
+            android:id="@+id/btnSettings"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_settings"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            app:tint="#FFFFFF"/>
 
-    <Button
-        android:layout_width="wrap_content"
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerVoiceUsers"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp"/>
+
+    <!-- Voice Control Bar -->
+    <LinearLayout
+        android:id="@+id/layoutVoiceControls"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Deconectare"/>
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="24dp"
+        android:background="#2C2C2C">
+        
+        <!-- Deafen Button (Leftmost) -->
+        <ImageButton
+            android:id="@+id/btnDeafen"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_circle_button"
+            android:backgroundTint="#444444"
+            android:src="@drawable/ic_headset"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            app:tint="#FFFFFF"
+            android:layout_marginEnd="12dp"/>
+
+        <!-- Mic Button -->
+        <ImageButton
+            android:id="@+id/btnMic"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_circle_button"
+            android:backgroundTint="#444444"
+            android:src="@drawable/ic_mic"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            app:tint="#FFFFFF"
+            android:layout_marginEnd="12dp"/>
+
+        <!-- Stop Watching Button (Visible only when watching) -->
+        <ImageButton
+            android:id="@+id/btnStopWatching"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_circle_button"
+            android:backgroundTint="#FF9800"
+            android:src="@drawable/ic_stop_watching"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            app:tint="#FFFFFF"
+            android:layout_marginEnd="12dp"
+            android:visibility="gone"/>
+
+        <!-- Camera Button -->
+        <ImageButton
+            android:id="@+id/btnCam"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_circle_button"
+            android:backgroundTint="#444444"
+            android:src="@drawable/ic_videocam_off"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            app:tint="#FFFFFF"
+            android:layout_marginEnd="12dp"/>
+            
+         <!-- Screen Share Button -->
+        <ImageButton
+            android:id="@+id/btnScreenShare"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_circle_button"
+            android:backgroundTint="#444444"
+            android:src="@drawable/ic_screen_share"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            app:tint="#FFFFFF"
+            android:layout_marginEnd="12dp"/>
+            
+        <!-- GIFT Button -->
+        <ImageButton
+            android:id="@+id/btnGiftVoice"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_circle_button"
+            android:backgroundTint="#FF9800"
+            android:src="@drawable/ic_gift_card"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            app:tint="#FFFFFF"
+            android:layout_marginEnd="12dp"/>
+
+        <!-- Hang Up Button -->
+        <ImageButton
+            android:id="@+id/btnHangUp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_circle_button"
+            android:backgroundTint="#F44336"
+            android:src="@drawable/ic_call_end"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            app:tint="#FFFFFF"/>
+
+    </LinearLayout>
+
 </LinearLayout>

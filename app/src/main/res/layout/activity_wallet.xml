@@ -15,15 +15,38 @@
         android:textSize="24sp"
         android:layout_marginBottom="16dp"/>
 
-    <TextView
-        android:id="@+id/txt_coin_balance"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0 OnlyCoins"
-        android:textSize="48sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:layout_marginBottom="48dp"/>
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="48dp">
+
+        <TextView
+            android:id="@+id/txt_coin_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginEnd="8dp"/>
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/onlycoin"
+            android:layout_marginEnd="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OnlyCoins"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_buy_coins"

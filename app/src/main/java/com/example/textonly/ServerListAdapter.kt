@@ -7,15 +7,17 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ServerListAdapter(private var servers: List<Server>) :
-    RecyclerView.Adapter<ServerListAdapter.ServerViewHolder>() {
+class ServerListAdapter(
+    private var servers: List<Server>,
+    private val clickListener: (Server) -> Unit, // Listener pentru click normal
+    private val longClickListener: (Server) -> Boolean // Listener pentru click lung
+) : RecyclerView.Adapter<ServerListAdapter.ServerViewHolder>() {
 
     class ServerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val serverName: TextView = view.findViewById(R.id.chatTitle) // Refolosim ID-ul din item_chat.xml
+        val serverName: TextView = view.findViewById(R.id.chatTitle)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServerViewHolder {
-        // Putem refolosi layout-ul `item_chat` pentru că are un titlu simplu
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_chat, parent, false)
         return ServerViewHolder(view)
@@ -25,14 +27,9 @@ class ServerListAdapter(private var servers: List<Server>) :
         val server = servers[position]
         holder.serverName.text = server.name
         
-        holder.itemView.setOnClickListener {
-            val context = holder.itemView.context
-            val intent = Intent(context, ServerActivity::class.java).apply {
-                putExtra("SERVER_NAME", server.name)
-                putExtra("SERVER_ID", server.id)
-            }
-            context.startActivity(intent)
-        }
+        // Setăm ambele tipuri de listeneri
+        holder.itemView.setOnClickListener { clickListener(server) }
+        holder.itemView.setOnLongClickListener { longClickListener(server) }
     }
 
     override fun getItemCount() = servers.size

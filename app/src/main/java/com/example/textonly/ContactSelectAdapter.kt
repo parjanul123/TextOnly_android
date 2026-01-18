@@ -13,7 +13,7 @@ class ContactSelectAdapter(
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView = view.findViewById(R.id.chatTitle)
-        val phone: TextView = view.findViewById(R.id.chatPhone)
+        // val phone: TextView = view.findViewById(R.id.chatPhone) // Comentat deoarece nu mai există
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -25,7 +25,7 @@ class ContactSelectAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val contact = contacts[position]
         holder.name.text = contact.name
-        holder.phone.text = contact.phone
+        // holder.phone.text = contact.phone // Comentat deoarece nu mai există
         holder.itemView.setOnClickListener { onContactClicked(contact) }
     }
 

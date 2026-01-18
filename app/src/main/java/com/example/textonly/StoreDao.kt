@@ -1,6 +1,7 @@
 package text.only.app
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 
@@ -15,6 +16,9 @@ interface StoreDao {
     // Inventory methods
     @Insert
     suspend fun insertInventoryItem(item: InventoryItem)
+
+    @Delete
+    suspend fun deleteInventoryItem(item: InventoryItem)
 
     @Query("SELECT * FROM inventory")
     suspend fun getInventory(): List<InventoryItem>

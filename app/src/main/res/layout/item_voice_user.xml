@@ -1,35 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:foreground="?android:attr/selectableItemBackground"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    android:id="@+id/cardVoiceUser"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    app:strokeWidth="0dp"
+    app:strokeColor="#2196F3">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/imgVoiceUserAvatar"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:src="@mipmap/textonly_round"
-            android:layout_marginBottom="8dp"/>
+        <!-- Camera Preview (initially GONE) -->
+        <androidx.camera.view.PreviewView
+            android:id="@+id/cameraPreview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+            
+        <!-- Simulated Screen Share Content (initially GONE) -->
+        <FrameLayout
+            android:id="@+id/layoutScreenShareContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#222222"
+            android:visibility="gone">
+            
+            <!-- Icon to show it's working -->
+            <ImageView
+                 android:layout_width="48dp"
+                 android:layout_height="48dp"
+                 android:src="@drawable/ic_screen_share"
+                 android:layout_gravity="center"
+                 app:tint="#FFFFFF"
+                 android:alpha="0.5"/>
+                 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LIVE SCREEN"
+                android:textColor="#FFFFFF"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="16dp"
+                android:alpha="0.8"/>
+        </FrameLayout>
 
-        <TextView
-            android:id="@+id/txtVoiceUserName"
+        <!-- Avatar View (Visible when camera/screen is OFF or Hidden) -->
+        <LinearLayout
+            android:id="@+id/layoutAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="#333333">
+
+            <ImageView
+                android:id="@+id/imgVoiceUserAvatar"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@mipmap/textonly_round"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/txtVoiceUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Username"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:gravity="center"/>
+        </LinearLayout>
+        
+        <!-- Watch Stream Button (Overlay) -->
+        <Button
+            android:id="@+id/btnWatchStream"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Username"
-            android:textStyle="bold"
-            android:textSize="14sp"
-            android:gravity="center"/>
-    </LinearLayout>
+            android:text="Urmărește partajarea"
+            android:textSize="12sp"
+            android:background="@android:color/transparent"
+            android:textColor="#FFFFFF"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            app:strokeColor="#FFFFFF"
+            app:strokeWidth="1dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+        
+        <!-- Flip Camera Button (Top Left) -->
+        <ImageView
+            android:id="@+id/btnFlipCamera"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_flip_camera"
+            android:layout_gravity="top|start"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_circle_button"
+            android:padding="6dp"
+            android:visibility="gone"
+            app:tint="#FFFFFF"/>
+        
+        <!-- Mute Icon Overlay (bottom right) -->
+        <ImageView
+            android:id="@+id/imgMuteStatus"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_mic_off"
+            app:tint="#F44336"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="8dp"
+            android:visibility="gone"/>
 
-</androidx.cardview.widget.CardView>
+    </FrameLayout>
+
+</com.google.android.material.card.MaterialCardView>

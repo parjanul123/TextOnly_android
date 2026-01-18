@@ -32,18 +32,30 @@
             android:id="@+id/spinnerCurrency"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/currencies"
             android:layout_marginBottom="6dp" />
 
         <!-- 🔥 AFIȘARE ONLYCOINS -->
-        <TextView
-            android:id="@+id/txtCoinsPreview"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Vei primi: 0 OnlyCoins"
-            android:textColor="#00E676"
-            android:textSize="16sp"
-            android:layout_marginBottom="24dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="24dp">
+            
+            <TextView
+                android:id="@+id/txtCoinsPreview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vei primi: 0"
+                android:textColor="#00E676"
+                android:textSize="16sp"
+                android:layout_marginEnd="8dp"/>
+                
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/onlycoin"/>
+        </LinearLayout>
 
         <!-- SUMA -->
         <TextView

@@ -4,6 +4,10 @@ import text.only.app.BuyOnlycoinsActivity;
 import text.only.app.Config;
 import text.only.app.R;
 import text.only.app.WalletActivity;
+import text.only.app.StoreActivity;
+import text.only.app.InventoryActivity;
+import text.only.app.TransactionsActivity;
+import text.only.app.AnimatedFrameView; // Import Custom View
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +16,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -34,13 +39,19 @@ public class ProfileActivity extends Activity {
     private EditText editDisplayName;
     private Button btnSave;
     private ImageView imgProfile;
+    private ImageView imgAvatarFrame;
+    private AnimatedFrameView viewAnimatedFrame; // Reference to custom view
     private Button btnWallet;
+    private Button btnStore;
+    private Button btnInventory;
+    private Button btnTransactions;
 
     private static final int PICK_IMAGE = 100;
 
     private static final String PREFS_NAME = "AppPrefs";
     private static final String KEY_DISPLAY_NAME = "displayName";
     private static final String KEY_PROFILE_IMAGE = "profileImageUri";
+    private static final String KEY_EQUIPPED_FRAME = "equipped_frame";
 
     private final OkHttpClient client = new OkHttpClient();
 
@@ -52,7 +63,12 @@ public class ProfileActivity extends Activity {
         editDisplayName = findViewById(R.id.edit_display_name);
         btnSave = findViewById(R.id.btn_save);
         imgProfile = findViewById(R.id.img_profile);
+        imgAvatarFrame = findViewById(R.id.img_avatar_frame);
+        viewAnimatedFrame = findViewById(R.id.view_animated_frame);
         btnWallet = findViewById(R.id.btn_wallet);
+        btnStore = findViewById(R.id.btn_store);
+        btnInventory = findViewById(R.id.btn_inventory);
+        btnTransactions = findViewById(R.id.btn_transactions);
 
         loadProfileData();
 
@@ -62,6 +78,16 @@ public class ProfileActivity extends Activity {
             Intent intent = new Intent(ProfileActivity.this, WalletActivity.class);
             startActivity(intent);
         });
+        
+        btnStore.setOnClickListener(v -> startActivity(new Intent(ProfileActivity.this, StoreActivity.class)));
+        btnInventory.setOnClickListener(v -> startActivity(new Intent(ProfileActivity.this, InventoryActivity.class)));
+        btnTransactions.setOnClickListener(v -> startActivity(new Intent(ProfileActivity.this, TransactionsActivity.class)));
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadProfileData(); 
     }
 
     private void openGallery() {
@@ -102,20 +128,34 @@ public class ProfileActivity extends Activity {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         String name = prefs.getString(KEY_DISPLAY_NAME, "");
         String imageUriString = prefs.getString(KEY_PROFILE_IMAGE, null);
+        String equippedFrame = prefs.getString(KEY_EQUIPPED_FRAME, null);
 
         editDisplayName.setText(name);
 
         if (imageUriString != null) {
             try {
                 Uri imageUri = Uri.parse(imageUriString);
-                // Încercăm să setăm imaginea. Dacă nu avem permisiuni, va arunca excepție.
                 imgProfile.setImageURI(imageUri);
             } catch (Exception e) {
                 Log.e("ProfileActivity", "Eroare la încărcarea imaginii salvate. Resetez.", e);
-                // 🛑 Dacă apare orice eroare (inclusiv SecurityException), ștergem URI-ul invalid
-                // și lăsăm imaginea default.
                 prefs.edit().remove(KEY_PROFILE_IMAGE).apply();
-                imgProfile.setImageResource(R.mipmap.ic_launcher_round); // Sau imaginea ta default
+                imgProfile.setImageResource(R.mipmap.ic_launcher_round); 
+            }
+        }
+        
+        // Load Frame Logic
+        imgAvatarFrame.setVisibility(View.GONE);
+        viewAnimatedFrame.setVisibility(View.GONE);
+
+        if (equippedFrame != null) {
+            if (equippedFrame.equals("ic_frame_rain")) {
+                // Use Animated View for Rain
+                viewAnimatedFrame.setVisibility(View.VISIBLE);
+                viewAnimatedFrame.setFrameType("frame_rain");
+            } else if (equippedFrame.equals("ic_coin_shape")) {
+                // Use Static View for simple neon
+                imgAvatarFrame.setVisibility(View.VISIBLE);
+                imgAvatarFrame.setImageResource(R.drawable.ic_coin_shape);
             }
         }
     }

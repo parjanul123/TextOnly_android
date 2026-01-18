@@ -1,104 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="24dp"
     android:background="#2C2C2C">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Setări Voce &amp; Video"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="24dp"/>
-
-    <!-- Volume Output -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Volum Ieșire (Voice)"
-        android:textColor="#B0B0B0"
-        android:layout_marginBottom="8dp"/>
-    <SeekBar
-        android:id="@+id/seekOutputVolume"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:max="100"
-        android:progress="100"
-        android:layout_marginBottom="16dp"/>
+        android:orientation="vertical"
+        android:padding="24dp">
 
-    <!-- Mic Sensitivity -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sensibilitate Microfon (dB)"
-        android:textColor="#B0B0B0"
-        android:layout_marginBottom="8dp"/>
-    <SeekBar
-        android:id="@+id/seekMicSensitivity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="100"
-        android:progress="50"
-        android:layout_marginBottom="16dp"/>
-
-    <!-- Video Quality -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Calitate Video (Cameră &amp; Share)"
-        android:textColor="#B0B0B0"
-        android:layout_marginBottom="8dp"/>
-    <RadioGroup
-        android:id="@+id/radioGroupQuality"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
-        <RadioButton
-            android:id="@+id/radio720p"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="720p"
+            android:text="Setări Voce &amp; Video"
+            android:textSize="20sp"
+            android:textStyle="bold"
             android:textColor="#FFFFFF"
-            android:layout_marginEnd="16dp"/>
-        <RadioButton
-            android:id="@+id/radio1080p"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Volume Output -->
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1080p"
-            android:textColor="#FFFFFF"/>
-    </RadioGroup>
+            android:text="Volum Ieșire (Voice)"
+            android:textColor="#B0B0B0"
+            android:layout_marginBottom="8dp"/>
+        <SeekBar
+            android:id="@+id/seekOutputVolume"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="100"
+            android:layout_marginBottom="16dp"/>
 
-    <!-- Share Audio Volume -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Volum Partajare Ecran"
-        android:textColor="#B0B0B0"
-        android:layout_marginBottom="8dp"/>
-    <SeekBar
-        android:id="@+id/seekShareVolume"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="100"
-        android:progress="100"
-        android:layout_marginBottom="8dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="* Sunetul partajării rămâne activ chiar dacă ești pe Deafen."
-        android:textSize="12sp"
-        android:textColor="#808080"
-        android:layout_marginBottom="24dp"/>
+        <!-- Mic Sensitivity -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sensibilitate Microfon (dB)"
+            android:textColor="#B0B0B0"
+            android:layout_marginBottom="8dp"/>
 
-    <Button
-        android:id="@+id/btnCloseSettings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Închide"/>
+        <!-- SEPARATOR -->
+        <SeekBar
+            android:id="@+id/seekMicSensitivity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:max="100"
+            android:progress="50" />
 
-</LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#444444"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Camera Quality -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Calitate Cameră"
+            android:textColor="#B0B0B0"
+            android:layout_marginBottom="8dp"/>
+        <Spinner
+            android:id="@+id/spinnerCameraQuality"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_circle_button"
+            android:backgroundTint="#444444"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Share Quality -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Calitate Partajare Ecran (Max: Ecran)"
+            android:textColor="#B0B0B0"
+            android:layout_marginBottom="8dp"/>
+        <Spinner
+            android:id="@+id/spinnerShareQuality"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_circle_button"
+            android:backgroundTint="#444444"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Share Audio Volume -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Volum Partajare Ecran"
+            android:textColor="#B0B0B0"
+            android:layout_marginBottom="8dp"/>
+        <SeekBar
+            android:id="@+id/seekShareVolume"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="100"
+            android:layout_marginBottom="8dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="* Sunetul partajării rămâne activ chiar dacă ești pe Deafen."
+            android:textSize="12sp"
+            android:textColor="#808080"
+            android:layout_marginBottom="24dp"/>
+
+        <Button
+            android:id="@+id/btnCloseSettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Salvează &amp; Închide"/>
+
+    </LinearLayout>
+</ScrollView>

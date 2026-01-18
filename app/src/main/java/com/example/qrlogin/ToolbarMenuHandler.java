@@ -1,5 +1,6 @@
 package text.only.app.qrlogin;
 
+import text.only.app.OnlyGuardActivity;
 import text.only.app.R;
 import text.only.app.ScanQRActivity;
 import android.app.Activity;
@@ -18,9 +19,9 @@ public class ToolbarMenuHandler {
                     // Deschide activitatea de profil
                     activity.startActivity(new Intent(activity, ProfileActivity.class));
                     return true;
-                } else if (item.getItemId() == R.id.action_add_device) {
-                    // Deschide activitatea de scanare QR
-                    activity.startActivity(new Intent(activity, ScanQRActivity.class));
+                } else if (item.getItemId() == R.id.action_only_guard) {
+                    // Deschide OnlyGuard
+                    activity.startActivity(new Intent(activity, OnlyGuardActivity.class));
                     return true;
                 }
                 return false;

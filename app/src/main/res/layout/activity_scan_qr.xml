@@ -6,15 +6,33 @@
         android:id="@+id/previewView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+        
+    <!-- Dark Overlay to emphasize the center -->
+    <!-- We can simulate this with 4 views or just use the frame for simplicity as requested "patratul ala" -->
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#40000000"/> <!-- Semi-transparent dark overlay -->
 
+    <ImageView
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_scan_frame"
+        android:alpha="0.8"/>
+        
+    <!-- Status Text -->
     <TextView
         android:id="@+id/txtStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Scanează codul QR"
+        android:text="Încadrează codul QR în chenar"
         android:textColor="@android:color/white"
-        android:textSize="18sp"
+        android:textSize="16sp"
+        android:background="#80000000"
+        android:padding="8dp"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="32dp" />
+        android:layout_marginBottom="64dp" />
 
 </FrameLayout>

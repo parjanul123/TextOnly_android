@@ -11,15 +11,90 @@
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
         
-    <TextView
-        android:id="@+id/txtUserBalance"
+    <!-- Balance Header with Coin Icon -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#EEE"
+        android:gravity="end|center_vertical"
         android:padding="16dp"
-        android:text="Balanță: 0 OnlyCoins"
-        android:textSize="18sp"
-        android:gravity="end"
-        android:background="#EEE"/>
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Balanță: "
+            android:textSize="18sp"
+            android:textColor="#000"/>
+
+        <TextView
+            android:id="@+id/txtUserBalance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#000"
+            android:layout_marginEnd="4dp"/>
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/onlycoin"/> <!-- Using drawable directly -->
+            
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" OnlyCoins"
+            android:textSize="18sp"
+            android:textColor="#000"/>
+    </LinearLayout>
+
+    <!-- Category Tabs -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:background="#F5F5F5">
+
+        <Button
+            android:id="@+id/btnCatEmotes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Emotes"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:textSize="12sp"/>
+
+        <Button
+            android:id="@+id/btnCatGifts"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Gifts"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:textSize="12sp"/>
+
+        <Button
+            android:id="@+id/btnCatFrames"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Frames"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:textSize="12sp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtCategoryTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="Emotes (Permanente)"
+        android:textStyle="bold"
+        android:textColor="#555"
+        android:layout_marginStart="8dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerStoreItems"
