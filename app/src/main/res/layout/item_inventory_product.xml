@@ -46,6 +46,15 @@
             android:layout_height="wrap_content"
             android:text="Folosește"
             style="@style/Widget.AppCompat.Button.Colored"/>
+            
+        <Button
+            android:id="@+id/btnRemove"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Scoate"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:backgroundTint="#F44336"
+            android:layout_marginTop="4dp"/>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

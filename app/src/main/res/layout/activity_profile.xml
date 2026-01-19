@@ -1,115 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:orientation="vertical"
+    tools:context=".ProfileActivity">
 
-    <LinearLayout
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarProfile"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:padding="24dp">
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:titleTextColor="@color/white"
+        android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        <!-- 📸 Poză de Profil -->
-        <FrameLayout
-            android:layout_width="wrap_content"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp">
-            
-            <!-- Avatar Image -->
-            <ImageView
-                android:id="@+id/img_profile"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_gravity="center"
-                android:background="@android:drawable/dialog_holo_light_frame"
-                android:clickable="true"
-                android:contentDescription="Poză de profil"
-                android:focusable="true"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/textonly_round" />
-                
-            <!-- Static Frame (For simple images) -->
-            <ImageView
-                android:id="@+id/img_avatar_frame"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                android:layout_gravity="center"
-                android:scaleType="fitCenter"
-                android:visibility="gone"
-                android:src="@drawable/ic_coin_shape" /> 
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="24dp">
 
-            <!-- Animated Frame (Custom View) -->
-            <text.only.app.AnimatedFrameView
-                android:id="@+id/view_animated_frame"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                android:layout_gravity="center"
-                android:visibility="gone" />
-
-            <TextView
+            <!-- 📸 Poză de Profil -->
+            <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_horizontal"
-                android:layout_marginBottom="10dp"
-                android:text="Schimbă"
-                android:textColor="@android:color/white"
-                android:background="#80000000"
-                android:padding="4dp"
-                android:textSize="12sp" />
-        </FrameLayout>
+                android:layout_marginBottom="16dp">
+                
+                <!-- Avatar Image -->
+                <ImageView
+                    android:id="@+id/img_profile"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:background="@android:drawable/dialog_holo_light_frame"
+                    android:clickable="true"
+                    android:contentDescription="Poză de profil"
+                    android:focusable="true"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/textonly_round" />
+                    
+                <!-- Static Frame (For simple images) -->
+                <ImageView
+                    android:id="@+id/img_avatar_frame"
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone"
+                    android:src="@drawable/ic_coin_shape" /> 
 
-        <EditText
-            android:id="@+id/edit_display_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nume afișat"
-            android:inputType="textPersonName"
-            android:layout_marginBottom="12dp"/>
+                <!-- Animated Frame (Custom View) -->
+                <text.only.app.AnimatedFrameView
+                    android:id="@+id/view_animated_frame"
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="10dp"
+                    android:text="Schimbă"
+                    android:textColor="@android:color/white"
+                    android:background="#80000000"
+                    android:padding="4dp"
+                    android:textSize="12sp" />
+            </FrameLayout>
 
-
-        <Button
-            android:id="@+id/btn_save"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Salvează Profil"
-            android:layout_marginBottom="12dp"/>
-
-        <!-- 💰 Buton Portofel -->
-        <Button
-            android:id="@+id/btn_wallet"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="💰 Portofel OnlyCoins"
-            android:backgroundTint="#FFD700"
-            android:textColor="#000000"
-            android:layout_marginTop="24dp" />
+            <EditText
+                android:id="@+id/edit_display_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nume afișat"
+                android:inputType="textPersonName"
+                android:layout_marginBottom="12dp"/>
             
-        <!-- 🏪 Magazin -->
-        <Button
-            android:id="@+id/btn_store"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="🏪 Magazin (Store)"
-            android:layout_marginTop="8dp" />
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Salvează Profil"
+                android:layout_marginBottom="12dp"/>
 
-        <!-- 🎒 Inventar -->
-        <Button
-            android:id="@+id/btn_inventory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="🎒 Inventar"
-            android:layout_marginTop="8dp" />
+            <!-- 💰 Buton Portofel -->
+            <Button
+                android:id="@+id/btn_wallet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="💰 Portofel OnlyCoins"
+                android:backgroundTint="#FFD700"
+                android:textColor="#000000"
+                android:layout_marginTop="24dp" />
+                
+            <!-- 🏪 Magazin -->
+            <Button
+                android:id="@+id/btn_store"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🏪 Magazin (Store)"
+                android:layout_marginTop="8dp" />
 
-        <!-- 📜 Jurnal Tranzacții -->
-        <Button
-            android:id="@+id/btn_transactions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="📜 Jurnal Tranzacții"
-            android:layout_marginTop="8dp" />
+            <!-- 🎒 Inventar -->
+            <Button
+                android:id="@+id/btn_inventory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🎒 Inventar"
+                android:layout_marginTop="8dp" />
 
-    </LinearLayout>
-</ScrollView>
+            <!-- 📜 Jurnal Tranzacții -->
+            <Button
+                android:id="@+id/btn_transactions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📜 Jurnal Tranzacții"
+                android:layout_marginTop="8dp" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

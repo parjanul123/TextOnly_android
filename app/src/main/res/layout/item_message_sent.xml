@@ -7,7 +7,7 @@
     android:gravity="end">
 
     <TextView
-        android:id="@+id/textMessage"
+        android:id="@+id/text_message_body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Mesaj trimis"
@@ -16,7 +16,4 @@
         android:textColor="@android:color/black"
         android:background="#DCF8C6" 
         android:backgroundTint="#DCF8C6" /> 
-        <!-- Using a hardcoded color/tint for sent messages distinct from received if drawable allows, 
-             or just a simple background for now to ensure it works. 
-             If message_bubble is a shape, tint might work. -->
 </LinearLayout>

@@ -40,6 +40,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import text.only.app.ServerActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -50,8 +51,7 @@ class ChannelVoiceFragment : Fragment() {
 
     private lateinit var recyclerVoiceUsers: RecyclerView
     private lateinit var adapter: VoiceUserAdapter
-    private val voiceUsers = mutableListOf<VoiceUser>()
-
+    
     // Controls
     private lateinit var layoutVoiceControls: LinearLayout
     private lateinit var layoutHeader: RelativeLayout
@@ -75,15 +75,39 @@ class ChannelVoiceFragment : Fragment() {
     private var myName: String = "Eu"
     
     private var currentCameraSelector: CameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
+    
+    // Listener for data updates
+    private val dataListener: () -> Unit = {
+        activity?.runOnUiThread {
+             if (::adapter.isInitialized) {
+                 adapter.notifyDataSetChanged()
+             }
+        }
+        Unit
+    }
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            if (permissions[Manifest.permission.CAMERA] == true) {
+            var camPermission = permissions[Manifest.permission.CAMERA] ?: false
+            var micPermission = permissions[Manifest.permission.RECORD_AUDIO] ?: false
+            
+            if (camPermission) {
                 if (isCamOn) startCameraForMe()
             } else {
-                Toast.makeText(context, "Permisiune cameră refuzată", Toast.LENGTH_SHORT).show()
-                isCamOn = false
-                updateCamUI()
+                 if (isCamOn) {
+                     Toast.makeText(context, "Permisiune cameră refuzată", Toast.LENGTH_SHORT).show()
+                     isCamOn = false
+                     updateCamUI()
+                 }
+            }
+            
+            if (!micPermission) {
+                 Toast.makeText(context, "Permisiune microfon refuzată", Toast.LENGTH_SHORT).show()
+                 toggleMic(forceMute = true)
+            } else {
+                 if (!isMicMuted) {
+                      toggleMic(forceMute = false) 
+                 }
             }
         }
         
@@ -116,8 +140,9 @@ class ChannelVoiceFragment : Fragment() {
         
         loadCurrentUser()
         
+        // Pass the live list from manager
         adapter = VoiceUserAdapter(
-            users = voiceUsers,
+            users = VoiceConnectionManager.users,
             myName = myName,
             onBindCamera = { userName, previewView ->
                 if (userName == myName && isCamOn) {
@@ -132,6 +157,8 @@ class ChannelVoiceFragment : Fragment() {
             }
         )
         recyclerVoiceUsers.adapter = adapter
+        
+        VoiceConnectionManager.listeners.add(dataListener)
 
         layoutVoiceControls = view.findViewById(R.id.layoutVoiceControls)
         layoutHeader = view.findViewById(R.id.layoutHeader)
@@ -145,16 +172,34 @@ class ChannelVoiceFragment : Fragment() {
         btnGiftVoice = view.findViewById(R.id.btnGiftVoice)
         
         setupListeners()
-        startVoiceActivitySimulation()
+        checkAudioPermission()
     }
     
-    // ... (restul metodelor onPictureInPictureModeChanged, updateButtonLayout etc. rămân la fel, doar adăugăm btnGiftVoice la update)
+    private fun checkAudioPermission() {
+         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+             requestPermissionLauncher.launch(arrayOf(Manifest.permission.RECORD_AUDIO))
+         }
+    }
+    
+    override fun onDestroyView() {
+        super.onDestroyView()
+        VoiceConnectionManager.listeners.remove(dataListener)
+    }
     
     private fun setupListeners() {
-        // ... (altele)
         btnSettings.setOnClickListener { showSettingsDialog() }
         btnDeafen.setOnClickListener { toggleDeafen() }
-        btnMic.setOnClickListener { if (!isDeafened) toggleMic() else Toast.makeText(context, "Nu poți porni microfonul în modul Deafen", Toast.LENGTH_SHORT).show() }
+        btnMic.setOnClickListener { 
+            if (!isDeafened) {
+                 if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                    toggleMic()
+                 } else {
+                    requestPermissionLauncher.launch(arrayOf(Manifest.permission.RECORD_AUDIO))
+                 }
+            } else {
+                 Toast.makeText(context, "Nu poți porni microfonul în modul Deafen", Toast.LENGTH_SHORT).show() 
+            }
+        }
         btnCam.setOnClickListener { 
              isCamOn = !isCamOn
             updateCamUI()
@@ -191,12 +236,10 @@ class ChannelVoiceFragment : Fragment() {
     // --- Gift Logic Start ---
     
     private fun openUserSelectionSideSheet() {
-        val dialog = AlertDialog.Builder(requireContext(), androidx.appcompat.R.style.Theme_AppCompat_Dialog_Alert) // Corrected reference
+        val dialog = AlertDialog.Builder(requireContext(), androidx.appcompat.R.style.Theme_AppCompat_Dialog_Alert) 
         val view = layoutInflater.inflate(R.layout.dialog_select_users, null)
         dialog.setView(view)
         
-        // Simulating a side sheet behavior using Gravity (requires custom dialog window config usually, 
-        // but for now standard dialog is fine or we can configure window)
         val alert = dialog.create()
         alert.window?.setGravity(Gravity.START or Gravity.FILL_VERTICAL)
         alert.window?.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT)
@@ -204,8 +247,8 @@ class ChannelVoiceFragment : Fragment() {
         val recycler = view.findViewById<RecyclerView>(R.id.recyclerSelectUsers)
         val btnNext = view.findViewById<Button>(R.id.btnNext)
         
-        // Filter out self and screen shares
-        val potentialRecipients = voiceUsers.filter { it.name != myName && !it.isScreenShare }
+        // Use Manager list
+        val potentialRecipients = VoiceConnectionManager.users.filter { it.name != myName && !it.isScreenShare }
         if (potentialRecipients.isEmpty()) {
             Toast.makeText(context, "Nu sunt alți utilizatori aici.", Toast.LENGTH_SHORT).show()
             return
@@ -243,7 +286,6 @@ class ChannelVoiceFragment : Fragment() {
             val allStoreItems = db.storeDao().getAllItems().filter { it.type == "GIFT" || it.type == "CONSUMABLE_EMOTE" }
             val inventory = db.storeDao().getInventory()
             
-            // Map store item to (StoreItem, InventoryCount)
             val giftData = allStoreItems.map { storeItem ->
                 val count = inventory.count { it.itemName == storeItem.name }
                 GiftViewData(storeItem, count)
@@ -263,10 +305,8 @@ class ChannelVoiceFragment : Fragment() {
         val available = giftData.count
         
         if (available >= totalNeeded) {
-            // Has enough, send immediately
             consumeAndSend(giftData.item, recipients, buyCount = 0)
         } else {
-            // Needs to buy
             val missing = totalNeeded - available
             val cost = missing * giftData.item.price
             
@@ -286,25 +326,15 @@ class ChannelVoiceFragment : Fragment() {
         val currentCoins = prefs.getInt("userCoins", 0)
         
         if (currentCoins >= cost) {
-            // Deduct coins
             prefs.edit().putInt("userCoins", currentCoins - cost).apply()
             
             lifecycleScope.launch {
                 val db = AppDatabase.getInstance(requireContext())
-                
-                // Log purchase
                  db.storeDao().insertTransaction(TransactionLog(
                     description = "Cumpărat automat în voice: ${item.name} x$buyCount",
                     amount = -cost,
                     type = "AUTO_PURCHASE"
                 ))
-                
-                // Note: We don't necessarily need to insert into inventory and then delete.
-                // We can just conceptually "buy and use".
-                // But for consistency with "consumeAndSend" which might look for inventory to delete...
-                // Actually, consumeAndSend will handle deleting the 'alreadyOwnedCount'.
-                // The newly bought ones don't exist in inventory table yet, so we just don't delete them, we just "send" them.
-                
                 consumeAndSend(item, recipients, buyCount = buyCount)
             }
         } else {
@@ -317,27 +347,22 @@ class ChannelVoiceFragment : Fragment() {
             val db = AppDatabase.getInstance(requireContext())
             val inventory = db.storeDao().getInventory().filter { it.itemName == item.name }
             
-            // Delete 'available' items from inventory
-            // We need to delete exactly (recipients.size - buyCount) items
             val toDeleteCount = recipients.size - buyCount
             
             if (toDeleteCount > 0) {
-                // Delete top N items
                 inventory.take(toDeleteCount).forEach { invItem ->
                      db.storeDao().deleteInventoryItem(invItem)
                 }
             }
             
-            // Send logic (Visual feedback + Log)
              db.storeDao().insertTransaction(TransactionLog(
                 description = "Gift trimis în Voice către ${recipients.size} persoane: ${item.name}",
-                amount = - (item.price * recipients.size), // Value tracking (though some paid with coins just now)
+                amount = - (item.price * recipients.size), 
                 type = "GIFT_SENT_VOICE"
             ))
             
             activity?.runOnUiThread {
                 Toast.makeText(context, "Ai trimis ${item.name} către: ${recipients.joinToString(", ")}", Toast.LENGTH_LONG).show()
-                // Here you would trigger an animation or send a WebSocket message to real server
             }
         }
     }
@@ -384,8 +409,6 @@ class ChannelVoiceFragment : Fragment() {
     }
 
     // --- Gift Logic End ---
-    
-    // ... (restul metodelor existente)
     
     private fun updateButtonLayout(btn: ImageButton, size: Int, marginEnd: Int, padding: Int) {
         if (btn.layoutParams == null) return
@@ -435,10 +458,22 @@ class ChannelVoiceFragment : Fragment() {
         } else {
             isMicMuted = !isMicMuted
         }
+        
+        // Notify Service about mute status
+        val context = context ?: return
+        if (isMicMuted) {
+             val intent = Intent(context, VoiceService::class.java).apply { action = "ACTION_MUTE" }
+             context.startService(intent)
+        } else {
+             val intent = Intent(context, VoiceService::class.java).apply { action = "ACTION_UNMUTE" }
+             context.startService(intent)
+        }
+        
         updateMicUI()
-        val index = voiceUsers.indexOfFirst { it.name == myName }
+        // Update user in manager
+        val index = VoiceConnectionManager.users.indexOfFirst { it.name == myName }
         if (index != -1) {
-            voiceUsers[index].isMuted = isMicMuted
+            VoiceConnectionManager.users[index].isMuted = isMicMuted
             adapter.notifyItemChanged(index, "MUTE")
         }
     }
@@ -486,18 +521,35 @@ class ChannelVoiceFragment : Fragment() {
         val savedShare = prefs.getInt("share_quality_idx", shareOptions.size - 1)
         if (savedShare < shareOptions.size) spinnerShare.setSelection(savedShare)
         
+        // --- MODIFICARE AICI: Etichete dB ---
         seekMic.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(s: SeekBar?, p: Int, f: Boolean) {}
+            override fun onProgressChanged(s: SeekBar?, p: Int, f: Boolean) {
+                // Update în timp real (opțional)
+                prefs.edit().putInt("mic_sensitivity", p).apply()
+            }
             override fun onStartTrackingTouch(s: SeekBar?) {}
             override fun onStopTrackingTouch(s: SeekBar?) {
-                val db = (s?.progress ?: 50) - 50
-                val text = if (db == -50) "Sensibilitate: Oprit" else "Sensibilitate: ${if (db>0) "+" else ""}$db dB"
+                val progress = s?.progress ?: 50
+                // Mapare: 0 -> -50dB, 50 -> 0dB, 100 -> +50dB
+                val db = (progress - 50)
+                val sign = if (db > 0) "+" else ""
+                val text = "Sensibilitate: ${sign}${db} dB"
                 Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
             }
         })
         
+        seekOutput.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(s: SeekBar?, p: Int, f: Boolean) {
+                // Salvăm imediat volumul de ieșire
+                prefs.edit().putInt("output_volume", p).apply()
+            }
+            override fun onStartTrackingTouch(s: SeekBar?) {}
+            override fun onStopTrackingTouch(s: SeekBar?) { }
+        })
+        
         dialogView.findViewById<Button>(R.id.btnCloseSettings).setOnClickListener {
             val editor = prefs.edit()
+            // Salvăm din nou pentru siguranță și celelalte setări
             editor.putInt("output_volume", seekOutput.progress)
             editor.putInt("mic_sensitivity", seekMic.progress)
             editor.putInt("share_volume", seekShare.progress)
@@ -513,9 +565,9 @@ class ChannelVoiceFragment : Fragment() {
     }
     
     private fun startWatchingStream(userName: String) {
-        val index = voiceUsers.indexOfFirst { it.name == userName }
+        val index = VoiceConnectionManager.users.indexOfFirst { it.name == userName }
         if (index != -1) {
-            voiceUsers[index].isBeingWatched = true
+            VoiceConnectionManager.users[index].isBeingWatched = true
             adapter.notifyItemChanged(index, "WATCH_STATE")
             btnStopWatching.visibility = View.VISIBLE
             Toast.makeText(context, "Urmărești partajarea", Toast.LENGTH_SHORT).show()
@@ -523,7 +575,7 @@ class ChannelVoiceFragment : Fragment() {
     }
     
     private fun stopWatchingAllStreams() {
-        voiceUsers.forEachIndexed { index, user ->
+        VoiceConnectionManager.users.forEachIndexed { index, user ->
             if (user.isBeingWatched) {
                 user.isBeingWatched = false
                 adapter.notifyItemChanged(index, "WATCH_STATE")
@@ -540,19 +592,19 @@ class ChannelVoiceFragment : Fragment() {
             isSpeaking = false,
             isCamOn = false
         )
-        voiceUsers.add(screenShareUser)
-        adapter.notifyItemInserted(voiceUsers.size - 1)
+        VoiceConnectionManager.addUser(screenShareUser)
         Toast.makeText(context, "Partajare ecran pornită", Toast.LENGTH_SHORT).show()
     }
     
     private fun stopScreenSharing() {
         isScreenSharing = false
         updateScreenShareUI()
-        val index = voiceUsers.indexOfFirst { it.isScreenShare && it.name.startsWith(myName) }
-        if (index != -1) {
-            voiceUsers.removeAt(index)
-            adapter.notifyItemRemoved(index)
+        
+        val toRemove = VoiceConnectionManager.users.firstOrNull { it.isScreenShare && it.name.startsWith(myName) }
+        if (toRemove != null) {
+            VoiceConnectionManager.removeUser(toRemove.name)
         }
+        
         if (btnStopWatching.visibility == View.VISIBLE) {
              btnStopWatching.visibility = View.GONE
         }
@@ -560,9 +612,9 @@ class ChannelVoiceFragment : Fragment() {
     }
     
     private fun startCameraForMe() {
-        val index = voiceUsers.indexOfFirst { it.name == myName && !it.isScreenShare }
+        val index = VoiceConnectionManager.users.indexOfFirst { it.name == myName && !it.isScreenShare }
         if (index != -1) {
-            voiceUsers[index].isCamOn = true
+            VoiceConnectionManager.users[index].isCamOn = true
             currentCameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
             adapter.notifyItemChanged(index) 
             Toast.makeText(context, "Camera față activată", Toast.LENGTH_SHORT).show()
@@ -570,9 +622,9 @@ class ChannelVoiceFragment : Fragment() {
     }
     
     private fun stopCameraForMe() {
-        val index = voiceUsers.indexOfFirst { it.name == myName && !it.isScreenShare }
+        val index = VoiceConnectionManager.users.indexOfFirst { it.name == myName && !it.isScreenShare }
         if (index != -1) {
-            voiceUsers[index].isCamOn = false
+            VoiceConnectionManager.users[index].isCamOn = false
             adapter.notifyItemChanged(index)
             cameraProvider?.unbindAll()
             Toast.makeText(context, "Camera oprită", Toast.LENGTH_SHORT).show()
@@ -585,7 +637,7 @@ class ChannelVoiceFragment : Fragment() {
         } else {
             CameraSelector.DEFAULT_FRONT_CAMERA
         }
-        val index = voiceUsers.indexOfFirst { it.name == myName && !it.isScreenShare }
+        val index = VoiceConnectionManager.users.indexOfFirst { it.name == myName && !it.isScreenShare }
         if (index != -1) {
             cameraProvider?.unbindAll()
             adapter.notifyItemChanged(index) 
@@ -605,32 +657,7 @@ class ChannelVoiceFragment : Fragment() {
         }, ContextCompat.getMainExecutor(requireContext()))
     }
     
-    private fun startVoiceActivitySimulation() {
-        lifecycleScope.launch {
-            while (isActive) {
-                val prefs = context?.getSharedPreferences("VoiceSettings", Context.MODE_PRIVATE)
-                val sensitivity = prefs?.getInt("mic_sensitivity", 50) ?: 50
-                
-                if (!isMicMuted && !isDeafened) { 
-                    val chance = Random.nextInt(100)
-                    val isSpeakingNow = chance < sensitivity
-                    
-                    val index = voiceUsers.indexOfFirst { it.name == myName && !it.isScreenShare }
-                    if (index != -1 && voiceUsers[index].isSpeaking != isSpeakingNow) {
-                        voiceUsers[index].isSpeaking = isSpeakingNow
-                        adapter.notifyItemChanged(index, "SPEAKING")
-                    }
-                } else {
-                     val index = voiceUsers.indexOfFirst { it.name == myName && !it.isScreenShare }
-                     if (index != -1 && voiceUsers[index].isSpeaking) {
-                         voiceUsers[index].isSpeaking = false
-                         adapter.notifyItemChanged(index, "SPEAKING")
-                     }
-                }
-                delay(Random.nextLong(300, 800))
-            }
-        }
-    }
+    // Removed local simulation logic in favor of Manager
     
     private fun updateMicUI() {
         if (isMicMuted) {
@@ -665,15 +692,14 @@ class ChannelVoiceFragment : Fragment() {
     }
     
     private fun loadCurrentUser() {
-        voiceUsers.clear()
+        // Only add if not exists (Service might have kept it)
         val prefs = context?.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         myName = prefs?.getString("displayName", "Eu") ?: "Eu"
         val myImageUri = prefs?.getString("profileImageUri", null)
-        voiceUsers.add(VoiceUser(name = myName, avatarUri = myImageUri))
         
-        // Mock other users for demonstration purposes
-        // voiceUsers.add(VoiceUser(name = "Andrei", isSpeaking = true))
-        // voiceUsers.add(VoiceUser(name = "Maria"))
+        if (VoiceConnectionManager.users.none { it.name == myName }) {
+            VoiceConnectionManager.addUser(VoiceUser(name = myName, avatarUri = myImageUri))
+        }
     }
 
     companion object {

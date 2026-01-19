@@ -22,6 +22,10 @@ interface StoreDao {
 
     @Query("SELECT * FROM inventory")
     suspend fun getInventory(): List<InventoryItem>
+    
+    // --- NEW: Clear Inventory ---
+    @Query("DELETE FROM inventory")
+    suspend fun clearInventory()
 
     // Transaction methods
     @Insert

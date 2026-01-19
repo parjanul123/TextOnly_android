@@ -40,6 +40,14 @@
             android:layout_weight="1"
             android:layout_marginStart="8dp"
             android:hint="Trimite un mesaj..." />
+            
+        <ImageButton
+            android:id="@+id/btn_emote"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="4dp"
+            android:src="@drawable/ic_emote" 
+            android:background="?attr/selectableItemBackgroundBorderless" />
 
         <Button
             android:id="@+id/btn_send_message"

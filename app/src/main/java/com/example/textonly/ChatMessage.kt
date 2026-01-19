@@ -1,7 +1,5 @@
 package text.only.app
 
-import android.net.Uri
-
 sealed class ChatMessage {
     abstract val isSent: Boolean
 }
@@ -13,23 +11,19 @@ data class TextMessage(
 
 data class FileMessage(
     val fileName: String,
-    val fileType: String?,
-    val price: Int, // Can be 1 (qty) if unit is Gift
-    val priceUnit: String?, // "COINS" or resourceName
+    val fileType: String?, // "image/png", etc.
+    val price: Int, // 0 if free
+    val priceUnit: String?, // "COINS" or gift resource name
     val priceGiftName: String?,
-    override val isSent: Boolean,
-    var isUnlocked: Boolean = false,
-    val localUri: Uri? = null,
-    var remoteUrl: String? = null
+    override val isSent: Boolean
 ) : ChatMessage()
 
 data class InviteMessage(
     val serverName: String,
-    val inviterName: String, 
+    val inviterName: String,
     val inviteCode: String,
     val expiryTimestamp: Long,
-    override val isSent: Boolean,
-    var state: InviteState = InviteState.PENDING 
+    override val isSent: Boolean
 ) : ChatMessage()
 
 data class GiftMessage(
@@ -39,9 +33,8 @@ data class GiftMessage(
     override val isSent: Boolean
 ) : ChatMessage()
 
-enum class InviteState {
-    PENDING,
-    ACCEPTED,
-    REFUSED,
-    EXPIRED
-}
+data class EmoteMessage(
+    val emoteName: String,
+    val emoteResource: String,
+    override val isSent: Boolean
+) : ChatMessage()

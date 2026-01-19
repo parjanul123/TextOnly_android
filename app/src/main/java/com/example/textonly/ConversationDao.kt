@@ -5,12 +5,16 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface ConversationDao {
     // onConflict = IGNORE previne adăugarea unui duplicat (bazat pe `contactPhone` care e unic)
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(conversation: ConversationEntity)
+    
+    @Update
+    suspend fun update(conversation: ConversationEntity)
 
     @Delete
     suspend fun delete(conversation: ConversationEntity)

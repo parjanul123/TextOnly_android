@@ -1,5 +1,6 @@
 package text.only.app
 
+
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
@@ -47,13 +48,24 @@ class SelectContactActivity : AppCompatActivity() {
                 setResult(Activity.RESULT_OK, resultIntent)
                 finish()
             } else {
-                // Do not create conversation here. It will be created in ChatWindowActivity when the first message is sent.
-                val intent = Intent(this@SelectContactActivity, ChatWindowActivity::class.java).apply {
-                    putExtra("contact_name", contact.name)
-                    putExtra("contact_phone", contact.phone)
+                // --- FIX: Salvăm conversația în DB înainte de a deschide fereastra de chat ---
+                lifecycleScope.launch {
+                    val db = AppDatabase.getInstance(applicationContext)
+                    // Insert (Ignore on conflict thanks to DAO logic) to ensure it appears in the main list
+                    val newConversation = ConversationEntity(
+                        contactName = contact.name, 
+                        contactPhone = contact.phone
+                    )
+                    db.conversationDao().insert(newConversation)
+                    
+                    // Acum deschidem chat-ul
+                    val intent = Intent(this@SelectContactActivity, ChatWindowActivity::class.java).apply {
+                        putExtra("contact_name", contact.name)
+                        putExtra("contact_phone", contact.phone)
+                    }
+                    startActivity(intent)
+                    finish() 
                 }
-                startActivity(intent)
-                finish() // Închidem ecranul de selecție după ce am început conversația
             }
         }
         recyclerContacts.adapter = adapter

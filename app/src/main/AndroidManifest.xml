@@ -10,8 +10,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
 
     <supports-screens
@@ -31,8 +33,7 @@
         android:supportsRtl="true"
         android:resizeableActivity="true"
         android:theme="@style/Theme.TextOnly"
-        android:usesCleartextTraffic="true"
-        tools:targetApi="34">
+        android:usesCleartextTraffic="true">
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -43,6 +44,12 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
+        <service 
+            android:name=".VoiceService" 
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="microphone" />
 
         <!-- Login -->
         <activity
@@ -86,6 +93,7 @@
             android:name=".ServerActivity"
             android:exported="false"
             android:supportsPictureInPicture="true"
+            android:launchMode="singleTask"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
 
         <!-- APELURI -->
@@ -102,13 +110,13 @@
 
         <!-- PROFIL -->
         <activity
-            android:name="text.only.app.qrlogin.ProfileActivity"
+            android:name="text.only.app.ProfileActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 
         <!-- PORTOFEL (WALLET) -->
         <activity
-            android:name=".WalletActivity"
+            android:name="text.only.app.WalletActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 

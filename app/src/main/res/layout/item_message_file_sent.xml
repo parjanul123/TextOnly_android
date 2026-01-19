@@ -11,19 +11,20 @@
         android:layout_height="wrap_content"
         android:maxWidth="260dp"
         android:background="#DCF8C6" 
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="12dp">
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_attachment"
-            android:layout_marginEnd="8dp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_attachment"
+                android:layout_marginEnd="8dp"/>
 
             <TextView
                 android:id="@+id/txtFileName"
@@ -32,28 +33,39 @@
                 android:text="document.pdf"
                 android:textColor="#000"
                 android:textStyle="bold" />
+        </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp">
+            
+            <TextView
+                android:id="@+id/txtFilePrice"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:layout_weight="1"
+                android:text="Preț: 5 Coins"
+                android:textColor="#555"
+                android:textSize="12sp" />
                 
-                <TextView
-                    android:id="@+id/txtPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Preț: 5 "
-                    android:textColor="#555"
-                    android:textSize="12sp" />
-                    
-                <ImageView
-                    android:id="@+id/imgPriceIcon"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/onlycoin"
-                    android:visibility="gone"/> <!-- Default gone, shown via code if needed -->
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/imgGiftIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/onlycoin"
+                android:visibility="gone"
+                android:layout_marginEnd="4dp"/>
+                
+            <Button
+                android:id="@+id/btnFileAction"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Trimis"
+                android:textSize="10sp"
+                android:enabled="false"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

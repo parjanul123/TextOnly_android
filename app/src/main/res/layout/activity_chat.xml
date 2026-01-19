@@ -1,84 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="12dp"
     tools:context=".ChatActivity">
 
-    <!-- Header cu titlu și setări -->
+    <!-- AppBar cu Toolbar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.TextOnly.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/Theme.TextOnly.PopupOverlay">
+
+            <!-- Layout custom pt titlu + butoane -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/app_name"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+                
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:orientation="horizontal">
+                    
+                    <ImageButton
+                        android:id="@+id/btnAddServer"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_add_circle_outline"
+                        android:contentDescription="Add Server"
+                        app:tint="@color/white"
+                        android:layout_gravity="center_vertical" />
+
+                    <ImageButton
+                        android:id="@+id/btnSettings"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_settings"
+                        android:contentDescription="Settings"
+                        app:tint="@color/white"
+                        android:layout_gravity="center_vertical" />
+                </LinearLayout>
+            </RelativeLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingBottom="8dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+        <!-- Lista principală (Servere + Conversații) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerChats"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="TextOnly"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black" />
+            android:clipToPadding="false"
+            android:paddingBottom="80dp" />
 
-        <ImageButton
-            android:id="@+id/btnAddServer"
-            android:layout_width="wrap_content"
+        <!-- VOICE BAR (Mini Player) -->
+        <!-- Vizibil doar când ești conectat la voce -->
+        <LinearLayout
+            android:id="@+id/layoutVoiceBar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_add"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="#2E7D32"
             android:padding="8dp"
-            android:contentDescription="Adaugă server" />
+            android:visibility="gone"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:elevation="8dp">
+            
+            <LinearLayout
+                android:id="@+id/containerVoiceInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?selectableItemBackground">
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Conectat la voce"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"/>
+                    
+                <TextView
+                    android:id="@+id/txtVoiceBarChannel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="General"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
+            </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/btnSettings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_preferences"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="8dp" />
+            <ImageButton
+                android:id="@+id/btnVoiceBarDisconnect"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                app:tint="#FFFFFF"
+                android:contentDescription="Disconnect"/>
+                
+        </LinearLayout>
+
     </LinearLayout>
 
-    <!-- 🔍 Bara de căutare -->
-    <EditText
-        android:id="@+id/searchBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Caută conversații..."
-        android:drawableStart="@android:drawable/ic_menu_search"
-        android:padding="10dp"
-        android:background="@android:drawable/edit_text"
-        android:inputType="text"
-        android:layout_marginBottom="8dp" />
-
-    <!-- 🔹 Lista de conversații -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerChats"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <!-- 🔹 Text dacă nu există conversații -->
-    <TextView
-        android:id="@+id/txtEmpty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Nu există conversații"
-        android:gravity="center"
-        android:visibility="gone"
-        android:textColor="@android:color/darker_gray" />
-
-    <!-- 🔹 Buton pentru chat nou -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddChat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:src="@android:drawable/ic_input_add"
-        android:layout_margin="16dp" />
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:layout_marginBottom="72dp" 
+        android:contentDescription="New Chat"
+        android:src="@drawable/ic_chat_add"
+        app:tint="@color/white"
+        app:layout_anchor="@id/recyclerChats"
+        app:layout_anchorGravity="bottom|end"/>
 
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

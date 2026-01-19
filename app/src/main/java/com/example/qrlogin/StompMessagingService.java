@@ -6,6 +6,8 @@ import android.content.Context;
 import android.os.Build;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
+import android.Manifest;
 import android.util.Log;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
@@ -48,6 +50,15 @@ public class StompMessagingService {
             .setContentText(content)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+            } else {
+                Log.w("StompMessagingService", "Notification POST_NOTIFICATIONS permission not granted, skipping notification.");
+            }
+        } else {
+            notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+        }
     }
 }
